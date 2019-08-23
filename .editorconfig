@@ -1,4 +1,8 @@
-root=true
+root = true
+
+; Unix-style newlines
+[*]
+end_of_line = LF
 
 [*.{groovy,java,kt,xml}]
 indent_style = tab
