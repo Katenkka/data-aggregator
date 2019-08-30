@@ -5,8 +5,7 @@ import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
-import net.ekatherine.code.aggregator.entity.tv.TvShowIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +68,7 @@ public class TvMazeTvShowAdapterTest
 			{"thetvdb", "73730"},
 			{"imdb", "tt0412253"},
 			{"tvmaze", tvMazeId},
-		}).map(data -> new TvShowIdentifier(tvShow, data[0], data[1])).collect(Collectors.toSet()), tvShow.getIdentifiers());
+		}).collect(Collectors.toMap(data -> data[0], data -> data[1])), tvShow.getIdentifiers());
 
 		Assert.assertTrue(tvShow.getActors().toString(), tvShow.getActors().containsAll(Stream.of("Kristen Bell", "Jason Dohring", "Enrico Colantoni", "Percy Daggs III", "Chris Lowell", "Francis Capra", "Ryan Hansen", "Michael Muhney", "Teddy Dunn", "Tina Majorino", "Julie Gonzalo").map(Party::new).collect(Collectors.toSet())));
 

@@ -6,11 +6,10 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.entity.book.Book;
-import net.ekatherine.code.aggregator.entity.book.BookIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
 import net.ekatherine.code.aggregator.fetcher.adapter.helper.ParsedEntity;
 import net.ekatherine.code.aggregator.fetcher.adapter.interfaces.ExternalSourceAdapter;
 import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSourceFoundException;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotBlank;
@@ -88,14 +87,7 @@ public class GoogleApiBookAdapter implements ExternalSourceAdapter<Book>
 		Optional.ofNullable(parsedBook.industryIdentifiers)
 			.map(Arrays::stream)
 			.orElseGet(Stream::empty)
-			.forEach(identifier ->
-			{
-				final BookIdentifier bookIdentifier = new BookIdentifier();
-				bookIdentifier.setType(util.sanitize(identifier.type).toLowerCase());
-				bookIdentifier.setValue(identifier.identifier);
-				bookIdentifier.setEntity(book);
-				book.addIdentifier(bookIdentifier);
-			});
+			.forEach(identifier -> book.addIdentifier(identifier.type.toLowerCase(), util.sanitize(identifier.identifier)));
 
 		if (Objects.nonNull(parsedBook.imageLinks) && Objects.nonNull(parsedBook.imageLinks.thumbnail))
 		{

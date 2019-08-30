@@ -4,19 +4,28 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.book.Book;
 import net.ekatherine.code.aggregator.repository.interfaces.BookRepository;
 import net.ekatherine.code.aggregator.service.interfaces.BookService;
+import net.ekatherine.code.aggregator.service.interfaces.PartyService;
+import net.ekatherine.code.aggregator.service.interfaces.SubjectService;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService
 {
 	private final BookRepository bookRepository;
+
+	private final SubjectService subjectService;
+	private final PartyService partyService;
+
 	private final Util util;
 
-	public BookServiceImpl(final BookRepository bookRepository, final Util util)
+	public BookServiceImpl(final BookRepository bookRepository, PartyService partyService, SubjectService subjectService, final Util util)
 	{
 		this.bookRepository = bookRepository;
+		this.partyService = partyService;
+		this.subjectService = subjectService;
 		this.util = util;
 	}
 
@@ -29,6 +38,11 @@ public class BookServiceImpl implements BookService
 	@Override
 	public Book save(final Book book)
 	{
+		book.setCategories(book.getCategories().stream().map(subjectService::replaceWithExisting).collect(Collectors.toSet()));
+
+		book.setAuthors(book.getAuthors().stream().map(partyService::replaceWithExisting).collect(Collectors.toSet()));
+		book.setPublishers(book.getPublishers().stream().map(partyService::replaceWithExisting).collect(Collectors.toSet()));
+
 		return bookRepository.saveAndFlush(book);
 	}
 
@@ -44,6 +58,6 @@ public class BookServiceImpl implements BookService
 		util.consumeSuppliedIfTrue(dest::setIdentifiers, src::getIdentifiers, Objects::nonNull);
 		util.consumeSuppliedIfTrue(dest::setPublishers, src::getPublishers, Objects::nonNull);
 
-		return bookRepository.saveAndFlush(dest);
+		return save(dest);
 	}
 }

@@ -6,10 +6,9 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.entity.movie.Movie;
-import net.ekatherine.code.aggregator.entity.movie.MovieIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
 import net.ekatherine.code.aggregator.fetcher.adapter.helper.ParsedEntity;
 import net.ekatherine.code.aggregator.fetcher.adapter.interfaces.ExternalSourceAdapter;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -71,11 +70,7 @@ public class OMDbMovieAdapter implements ExternalSourceAdapter<Movie>
 
 		if (Objects.nonNull(parsedMovie.imdbID))
 		{
-			final MovieIdentifier movieIdentifier = new MovieIdentifier();
-			movieIdentifier.setType("imdb");
-			movieIdentifier.setValue(util.sanitize(parsedMovie.imdbID));
-			movieIdentifier.setEntity(movie);
-			movie.setIdentifiers(Collections.singleton(movieIdentifier));
+			movie.addIdentifier("imdb", util.sanitize(parsedMovie.imdbID));
 		}
 
 		if (Objects.nonNull(parsedMovie.Released))

@@ -4,7 +4,7 @@ package net.ekatherine.code.aggregator.fetcher.adapter;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.tv.Episode;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

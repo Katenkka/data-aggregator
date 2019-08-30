@@ -41,6 +41,6 @@ public class GameServiceImpl implements GameService
 		util.consumeSuppliedIfTrue(dest::setReleasedAt, src::getReleasedAt, Objects::nonNull);
 		util.consumeSuppliedIfTrue(dest::setStatus, src::getStatus, Objects::nonNull);
 
-		return repository.saveAndFlush(dest);
+		return save(dest);
 	}
 }

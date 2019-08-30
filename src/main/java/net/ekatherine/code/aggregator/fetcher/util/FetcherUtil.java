@@ -1,4 +1,4 @@
-package net.ekatherine.code.aggregator.fetcher;
+package net.ekatherine.code.aggregator.fetcher.util;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

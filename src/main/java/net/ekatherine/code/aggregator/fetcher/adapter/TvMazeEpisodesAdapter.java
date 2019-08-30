@@ -5,8 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.tv.Episode;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
 import net.ekatherine.code.aggregator.fetcher.adapter.helper.ParsedEntity;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotBlank;

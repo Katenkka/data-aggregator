@@ -42,6 +42,6 @@ public class TvShowServiceImpl implements TvShowService
 
 		dest.updateEpisodes(src.getEpisodes());
 
-		return tvShowRepository.saveAndFlush(dest);
+		return save(dest);
 	}
 }

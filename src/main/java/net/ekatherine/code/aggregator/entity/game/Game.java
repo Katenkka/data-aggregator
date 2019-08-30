@@ -4,20 +4,36 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.Subject;
+import net.ekatherine.code.aggregator.entity.interfaces.HasExternalIdentifiers;
 import net.ekatherine.code.aggregator.entity.interfaces.Timestampable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "game")
-public class Game implements Timestampable
+public class Game implements Timestampable, HasExternalIdentifiers
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,8 +80,8 @@ public class Game implements Timestampable
 	@JoinTable(name = "game_publisher", joinColumns = @JoinColumn(name = "game_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "party_id", referencedColumnName = "id"))
 	private Set<Party> publishers;
 
-	@OneToMany(mappedBy = "game")
-	private Set<GameIdentifier> identifiers;
+	@ElementCollection
+	private Map<String, String> identifiers;
 
 	@ManyToOne
 	@JoinColumn
@@ -90,7 +106,7 @@ public class Game implements Timestampable
 		genres = new HashSet<>();
 		themes = new HashSet<>();
 		publishers = new HashSet<>();
-		identifiers = new HashSet<>();
+		identifiers = new HashMap<>();
 	}
 
 	@Override
@@ -270,19 +286,22 @@ public class Game implements Timestampable
 		publishers.add(publisher);
 	}
 
-	public Set<GameIdentifier> getIdentifiers()
+	@Override
+	public void addIdentifier(String key, String val)
+	{
+		identifiers.put(key, val);
+	}
+
+	@Override
+	public Map<String, String> getIdentifiers()
 	{
 		return identifiers;
 	}
 
-	public void setIdentifiers(final Set<GameIdentifier> identifiers)
+	@Override
+	public void setIdentifiers(Map<String, String> identifiers)
 	{
 		this.identifiers = identifiers;
-	}
-
-	public void addIdentifier(final GameIdentifier identifier)
-	{
-		identifiers.add(identifier); 
 	}
 
 	public GameSeries getGameSeries()

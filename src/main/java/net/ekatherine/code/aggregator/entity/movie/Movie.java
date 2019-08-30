@@ -4,19 +4,35 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.Subject;
+import net.ekatherine.code.aggregator.entity.interfaces.HasExternalIdentifiers;
 import net.ekatherine.code.aggregator.entity.interfaces.Timestampable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "movie")
-public class Movie implements Timestampable
+public class Movie implements Timestampable, HasExternalIdentifiers
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,8 +75,8 @@ public class Movie implements Timestampable
 	@Column(name = "released_at")
 	private Instant releasedAt;
 
-	@OneToMany(mappedBy = "movie")
-	private Set<MovieIdentifier> identifiers;
+	@ElementCollection
+	private Map<String, String> identifiers;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "movie_genre", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
@@ -78,7 +94,7 @@ public class Movie implements Timestampable
 	{
 		actors = new HashSet<>();
 		directors = new HashSet<>();
-		identifiers = new HashSet<>();
+		identifiers = new HashMap<>();
 		genres = new HashSet<>();
 	}
 
@@ -202,12 +218,20 @@ public class Movie implements Timestampable
 		this.releasedAt = releasedAt;
 	}
 
-	public Set<MovieIdentifier> getIdentifiers()
+	@Override
+	public void addIdentifier(String key, String val)
+	{
+		identifiers.put(key, val);
+	}
+
+	@Override
+	public Map<String, String> getIdentifiers()
 	{
 		return identifiers;
 	}
 
-	public void setIdentifiers(final Set<MovieIdentifier> identifiers)
+	@Override
+	public void setIdentifiers(Map<String, String> identifiers)
 	{
 		this.identifiers = identifiers;
 	}
