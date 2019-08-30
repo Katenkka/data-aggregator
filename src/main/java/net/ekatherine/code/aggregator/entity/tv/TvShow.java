@@ -6,19 +6,39 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.Subject;
+import net.ekatherine.code.aggregator.entity.interfaces.HasExternalIdentifiers;
 import net.ekatherine.code.aggregator.entity.interfaces.Series;
 import net.ekatherine.code.aggregator.entity.interfaces.Timestampable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "tvshow")
-public class TvShow implements Timestampable, Series<Episode>
+public class TvShow implements Timestampable, Series<Episode>, HasExternalIdentifiers
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,8 +70,8 @@ public class TvShow implements Timestampable, Series<Episode>
 	@Column(name = "poster_url")
 	private String posterUrl;
 
-	@OneToMany(mappedBy = "tvShow")
-	private Set<TvShowIdentifier> identifiers;
+	@ElementCollection
+	private Map<String, String> identifiers;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "tvshow_genre", joinColumns = @JoinColumn(name = "tvshow_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
@@ -69,7 +89,7 @@ public class TvShow implements Timestampable, Series<Episode>
 	{
 		actors = new HashSet<>();
 		episodes = new ArrayList<>();
-		identifiers = new HashSet<>();
+		identifiers = new HashMap<>();
 		genres = new HashSet<>();
 	}
 
@@ -158,19 +178,22 @@ public class TvShow implements Timestampable, Series<Episode>
 		this.status = status;
 	}
 
-	public Set<TvShowIdentifier> getIdentifiers()
+	@Override
+	public void addIdentifier(String key, String val)
+	{
+		identifiers.put(key, val);
+	}
+
+	@Override
+	public Map<String, String> getIdentifiers()
 	{
 		return identifiers;
 	}
 
-	public void setIdentifiers(final Set<TvShowIdentifier> identifiers)
+	@Override
+	public void setIdentifiers(Map<String, String> identifiers)
 	{
 		this.identifiers = identifiers;
-	}
-
-	public void addIdentifier(final TvShowIdentifier identifier)
-	{
-		identifiers.add(identifier);
 	}
 
 	public Set<Subject> getGenres()

@@ -4,9 +4,8 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.book.Book;
-import net.ekatherine.code.aggregator.entity.book.BookIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
 import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSourceFoundException;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +73,7 @@ public class GoogleApiBookAdapterTest
 		Assert.assertEquals(Stream.of(new String[][]{
 			{"isbn_13", "9780804170727"},
 			{"isbn_10", "080417072X"},
-		}).map(data -> new BookIdentifier(book, data[0], data[1])).collect(Collectors.toSet()), book.getIdentifiers());
+		}).collect(Collectors.toMap(data -> data[0], data -> data[1])), book.getIdentifiers());
 	}
 
 	private String getSuccessfulFullResponse()

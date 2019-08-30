@@ -5,9 +5,8 @@ import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.entity.game.Game;
-import net.ekatherine.code.aggregator.entity.game.GameIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
 import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSourceFoundException;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,7 +79,7 @@ public class GiantBombGameAdapterTest
 
 		Assert.assertEquals(Stream.of(new String[][]{
 			{"giantBombGuid", giantBombKey},
-		}).map(data -> new GameIdentifier(game, data[0], data[1])).collect(Collectors.toSet()), game.getIdentifiers());
+		}).collect(Collectors.toMap(data -> data[0], data -> data[1])), game.getIdentifiers());
 	}
 
 	private String getSuccessfulFullResponse()

@@ -4,19 +4,35 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.Subject;
+import net.ekatherine.code.aggregator.entity.interfaces.HasExternalIdentifiers;
 import net.ekatherine.code.aggregator.entity.interfaces.Timestampable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "book")
-public class Book implements Timestampable
+public class Book implements Timestampable, HasExternalIdentifiers
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,8 +65,8 @@ public class Book implements Timestampable
 	@JoinTable(name = "book_publisher", joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "party_id", referencedColumnName = "id"))
 	private Set<Party> publishers;
 
-	@OneToMany(mappedBy = "book")
-	private Set<BookIdentifier> identifiers;
+	@ElementCollection
+	private Map<String, String> identifiers;
 
 	@ManyToOne
 	@JoinColumn
@@ -73,7 +89,7 @@ public class Book implements Timestampable
 		authors = new HashSet<>();
 		categories = new HashSet<>();
 		publishers = new HashSet<>();
-		identifiers = new HashSet<>();
+		identifiers = new HashMap<>();
 	}
 
 	@Override
@@ -138,9 +154,10 @@ public class Book implements Timestampable
 		publishers.add(publisher);
 	}
 
-	public void addIdentifier(final BookIdentifier identifier)
+	@Override
+	public void addIdentifier(final String key, final String val)
 	{
-		identifiers.add(identifier);
+		identifiers.put(key, val);
 	}
 
 	public String getCoverUrl()
@@ -225,12 +242,14 @@ public class Book implements Timestampable
 		this.publishers = publishers;
 	}
 
-	public Set<BookIdentifier> getIdentifiers()
+	@Override
+	public Map<String, String> getIdentifiers()
 	{
 		return identifiers;
 	}
 
-	public void setIdentifiers(final Set<BookIdentifier> identifiers)
+	@Override
+	public void setIdentifiers(final Map<String, String> identifiers)
 	{
 		this.identifiers = identifiers;
 	}

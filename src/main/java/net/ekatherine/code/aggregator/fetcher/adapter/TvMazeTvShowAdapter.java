@@ -7,10 +7,9 @@ import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
-import net.ekatherine.code.aggregator.entity.tv.TvShowIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
 import net.ekatherine.code.aggregator.fetcher.adapter.helper.ParsedEntity;
 import net.ekatherine.code.aggregator.fetcher.adapter.interfaces.ExternalSourceAdapter;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -44,11 +43,7 @@ public class TvMazeTvShowAdapter implements ExternalSourceAdapter<TvShow>
 
 		final TvShow tvShow = populateExternalContentToEntity(parsedEntity);
 
-		final TvShowIdentifier tvShowIdentifier = new TvShowIdentifier();
-		tvShowIdentifier.setType("tvmaze");
-		tvShowIdentifier.setValue(tvMazeId);
-		tvShowIdentifier.setEntity(tvShow);
-		tvShow.addIdentifier(tvShowIdentifier);
+		tvShow.addIdentifier("tvmaze", tvMazeId);
 
 		tvShow.setEpisodes(tvMazeEpisodesAdapter.getEntities(tvMazeId, tvShow));
 
@@ -90,32 +85,19 @@ public class TvMazeTvShowAdapter implements ExternalSourceAdapter<TvShow>
 			.orElseGet(Stream::empty)
 			.forEach(obj -> tvShow.addGenre(new Subject(util.sanitize(obj))));
 
-		TvShowIdentifier tvShowIdentifier;
 		if (!StringUtils.isEmpty(parsedTvShow.externals.imdb))
 		{
-			tvShowIdentifier = new TvShowIdentifier();
-			tvShowIdentifier.setType("imdb");
-			tvShowIdentifier.setValue(util.sanitize(parsedTvShow.externals.imdb));
-			tvShowIdentifier.setEntity(tvShow);
-			tvShow.addIdentifier(tvShowIdentifier);
+			tvShow.addIdentifier("imdb", util.sanitize(parsedTvShow.externals.imdb));
 		}
 
 		if (!StringUtils.isEmpty(parsedTvShow.externals.thetvdb))
 		{
-			tvShowIdentifier = new TvShowIdentifier();
-			tvShowIdentifier.setType("thetvdb");
-			tvShowIdentifier.setValue(util.sanitize(parsedTvShow.externals.thetvdb));
-			tvShowIdentifier.setEntity(tvShow);
-			tvShow.addIdentifier(tvShowIdentifier);
+			tvShow.addIdentifier("thetvdb", util.sanitize(parsedTvShow.externals.thetvdb));
 		}
 
 		if (!StringUtils.isEmpty(parsedTvShow.externals.tvrage))
 		{
-			tvShowIdentifier = new TvShowIdentifier();
-			tvShowIdentifier.setType("tvrage");
-			tvShowIdentifier.setValue(util.sanitize(parsedTvShow.externals.tvrage));
-			tvShowIdentifier.setEntity(tvShow);
-			tvShow.addIdentifier(tvShowIdentifier);
+			tvShow.addIdentifier("tvrage", util.sanitize(parsedTvShow.externals.tvrage));
 		}
 
 		if (Objects.nonNull(parsedTvShow._embedded) && Objects.nonNull(parsedTvShow._embedded.cast))

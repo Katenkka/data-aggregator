@@ -4,8 +4,7 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.entity.movie.Movie;
-import net.ekatherine.code.aggregator.entity.movie.MovieIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +61,7 @@ public class OMDbMovieAdapterTest
 
 		Assert.assertEquals(Stream.of("Kristen Bell", "Jason Dohring", "Enrico Colantoni", "Chris Lowell").map(Party::new).collect(Collectors.toSet()), movie.getActors());
 
-		Assert.assertEquals(Stream.of(new String[][]{{"imdb", "tt2771372"},}).map(data -> new MovieIdentifier(movie, data[0], data[1])).collect(Collectors.toSet()), movie.getIdentifiers());
+		Assert.assertEquals(Stream.of(new String[][]{{"imdb", "tt2771372"},}).collect(Collectors.toMap(data -> data[0], data -> data[1])), movie.getIdentifiers());
 	}
 
 	private String getSuccessfulFullResponse()

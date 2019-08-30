@@ -6,11 +6,10 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.entity.game.Game;
-import net.ekatherine.code.aggregator.entity.game.GameIdentifier;
-import net.ekatherine.code.aggregator.fetcher.FetcherUtil;
 import net.ekatherine.code.aggregator.fetcher.adapter.helper.ParsedEntity;
 import net.ekatherine.code.aggregator.fetcher.adapter.interfaces.ExternalSourceAdapter;
 import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSourceFoundException;
+import net.ekatherine.code.aggregator.fetcher.util.FetcherUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -46,11 +45,7 @@ public class GiantBombGameAdapter implements ExternalSourceAdapter<Game>
 
 		final Game game = populateExternalContentToEntity(parsedGame);
 
-		final GameIdentifier identifier = new GameIdentifier();
-		identifier.setType("giantBombGuid");
-		identifier.setValue(giantBombGuid);
-		identifier.setEntity(game);
-		game.addIdentifier(identifier);
+		game.addIdentifier("giantBombGuid", giantBombGuid);
 
 		return game;
 	}

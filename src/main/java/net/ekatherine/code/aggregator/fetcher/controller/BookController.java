@@ -1,4 +1,4 @@
-package net.ekatherine.code.aggregator.fetcher;
+package net.ekatherine.code.aggregator.fetcher.controller;
 
 import net.ekatherine.code.aggregator.entity.book.Book;
 import net.ekatherine.code.aggregator.fetcher.adapter.interfaces.ExternalSourceAdapter;
