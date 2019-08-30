@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController(value = "fetcherTvShowController")
 public class TvShowController extends MainController
@@ -40,5 +41,16 @@ public class TvShowController extends MainController
 		final TvShow tvShow = tvShowService.getOne(id);
 		final TvShow fetchedTvShow = externalSourceAdapter.getEntity(tvMazeId);
 		return tvShowService.update(tvShow, fetchedTvShow);
+	}
+
+	@Transactional
+	@GetMapping(value = "/tvshow/updateAllByTvMazeId")
+	public void updateAllByTvMazeId() throws IOException, NoEntityFromExternalSourceFoundException
+	{
+		final List<TvShow> all = tvShowService.findAll();
+		for (TvShow tvShow : all) {
+			final TvShow fetchedTvShow = externalSourceAdapter.getEntity(tvShow.getIdentifiers().get("tvMazeId"));
+			tvShowService.update(tvShow, fetchedTvShow);
+		}
 	}
 }

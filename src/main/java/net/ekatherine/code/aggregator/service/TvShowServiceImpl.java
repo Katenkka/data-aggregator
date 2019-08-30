@@ -6,6 +6,8 @@ import net.ekatherine.code.aggregator.repository.interfaces.TvShowRepository;
 import net.ekatherine.code.aggregator.service.interfaces.TvShowService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -27,6 +29,12 @@ public class TvShowServiceImpl implements TvShowService
 	}
 
 	@Override
+	public List<TvShow> findAll()
+	{
+		return tvShowRepository.findAll();
+	}
+
+	@Override
 	public TvShow save(final TvShow entity)
 	{
 		return tvShowRepository.saveAndFlush(entity);
@@ -42,6 +50,7 @@ public class TvShowServiceImpl implements TvShowService
 
 		dest.updateEpisodes(src.getEpisodes());
 
+		dest.setUpdatedAt(Instant.now());
 		return save(dest);
 	}
 }

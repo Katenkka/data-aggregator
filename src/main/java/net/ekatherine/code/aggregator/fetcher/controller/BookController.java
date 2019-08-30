@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController(value = "fetcherBookController")
 public class BookController extends MainController
@@ -40,5 +41,16 @@ public class BookController extends MainController
 		final Book book = bookService.getOne(id);
 		final Book fetchedBook = externalSourceAdapter.getEntity(isbn10);
 		return bookService.update(book, fetchedBook);
+	}
+
+	@Transactional
+	@GetMapping(value = "/book/updateAllByIsbn")
+	public void updateAllByIsbn() throws IOException, NoEntityFromExternalSourceFoundException
+	{
+		final List<Book> all = bookService.findAll();
+		for (Book book : all) {
+			final Book fetchedBook = externalSourceAdapter.getEntity(book.getIdentifiers().get("isbn_10"));
+			bookService.update(book, fetchedBook);
+		}
 	}
 }

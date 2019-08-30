@@ -8,6 +8,8 @@ import net.ekatherine.code.aggregator.service.interfaces.PartyService;
 import net.ekatherine.code.aggregator.service.interfaces.SubjectService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,12 @@ public class BookServiceImpl implements BookService
 	}
 
 	@Override
+	public List<Book> findAll()
+	{
+		return bookRepository.findAll();
+	}
+
+	@Override
 	public Book save(final Book book)
 	{
 		book.setCategories(book.getCategories().stream().map(subjectService::replaceWithExisting).collect(Collectors.toSet()));
@@ -58,6 +66,7 @@ public class BookServiceImpl implements BookService
 		util.consumeSuppliedIfTrue(dest::setIdentifiers, src::getIdentifiers, Objects::nonNull);
 		util.consumeSuppliedIfTrue(dest::setPublishers, src::getPublishers, Objects::nonNull);
 
+		dest.setUpdatedAt(Instant.now());
 		return save(dest);
 	}
 }
