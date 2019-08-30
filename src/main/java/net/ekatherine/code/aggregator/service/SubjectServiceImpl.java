@@ -3,7 +3,6 @@ package net.ekatherine.code.aggregator.service;
 import net.ekatherine.code.aggregator.entity.Subject;
 import net.ekatherine.code.aggregator.repository.interfaces.SubjectRepository;
 import net.ekatherine.code.aggregator.service.interfaces.SubjectService;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,13 +17,13 @@ public class SubjectServiceImpl implements SubjectService
 		this.subjectRepository = subjectRepository;
 	}
 
-	public Subject replaceWithExisting(Subject category)
+	public Subject replaceWithExisting(Subject subject)
 	{
-		final List<Subject> existing = subjectRepository.findAll(Example.of(category));
-		if (!existing.isEmpty())
+		final List<Subject> subjects = subjectRepository.findByTitleIgnoreCase(subject.getTitle());
+		if (!subjects.isEmpty())
 		{
-			category = existing.iterator().next();
+			return subjects.get(0);
 		}
-		return category;
+		return subject;
 	}
 }

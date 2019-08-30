@@ -6,30 +6,38 @@ import net.ekatherine.code.aggregator.repository.interfaces.GameRepository;
 import net.ekatherine.code.aggregator.service.interfaces.GameService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 public class GameServiceImpl implements GameService
 {
-	private final GameRepository repository;
+	private final GameRepository gameRepository;
 	private final Util util;
 
 	public GameServiceImpl(final GameRepository gameRepository, final Util util)
 	{
-		repository = gameRepository;
+		this.gameRepository = gameRepository;
 		this.util = util;
 	}
 
 	@Override
 	public Game getOne(final Long id)
 	{
-		return repository.getOne(id);
+		return gameRepository.getOne(id);
+	}
+
+	@Override
+	public List<Game> findAll()
+	{
+		return gameRepository.findAll();
 	}
 
 	@Override
 	public Game save(final Game entity)
 	{
-		return repository.saveAndFlush(entity);
+		return gameRepository.saveAndFlush(entity);
 	}
 
 	@Override
@@ -41,6 +49,7 @@ public class GameServiceImpl implements GameService
 		util.consumeSuppliedIfTrue(dest::setReleasedAt, src::getReleasedAt, Objects::nonNull);
 		util.consumeSuppliedIfTrue(dest::setStatus, src::getStatus, Objects::nonNull);
 
+		dest.setUpdatedAt(Instant.now());
 		return save(dest);
 	}
 }

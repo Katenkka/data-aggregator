@@ -3,10 +3,9 @@ package net.ekatherine.code.aggregator.service;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.repository.interfaces.PartyRepository;
 import net.ekatherine.code.aggregator.service.interfaces.PartyService;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.List;
 
 @Component
 public class PartyServiceImpl implements PartyService
@@ -21,11 +20,13 @@ public class PartyServiceImpl implements PartyService
 	@Override
 	public Party replaceWithExisting(Party obj)
 	{
-		final Optional<Party> existing = partyRepository.findOne(Example.of(obj));
-		if (existing.isPresent())
+		final List<Party> parties = partyRepository.findByTitleIgnoreCase(obj.getTitle());
+
+		if (!parties.isEmpty())
 		{
-			obj = existing.get();
+			return parties.get(0);
 		}
+
 		return obj;
 	}
 }

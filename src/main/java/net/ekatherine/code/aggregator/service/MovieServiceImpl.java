@@ -6,6 +6,8 @@ import net.ekatherine.code.aggregator.repository.interfaces.MovieRepository;
 import net.ekatherine.code.aggregator.service.interfaces.MovieService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -33,6 +35,12 @@ public class MovieServiceImpl implements MovieService
 	}
 
 	@Override
+	public List<Movie> findAll()
+	{
+		return movieRepository.findAll();
+	}
+
+	@Override
 	public Movie update(final Movie dest, final Movie src)
 	{
 		util.consumeSuppliedIfTrue(dest::setDescription, src::getDescription, Objects::nonNull);
@@ -40,6 +48,7 @@ public class MovieServiceImpl implements MovieService
 		util.consumeSuppliedIfTrue(dest::setReleasedAt, src::getReleasedAt, Objects::nonNull);
 		util.consumeSuppliedIfTrue(dest::setStatus, src::getStatus, Objects::nonNull);
 
+		dest.setUpdatedAt(Instant.now());
 		return save(dest);
 	}
 }

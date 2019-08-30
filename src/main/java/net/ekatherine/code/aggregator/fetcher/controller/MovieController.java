@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController(value = "fetcherMovieController")
 public class MovieController extends MainController
@@ -30,5 +31,16 @@ public class MovieController extends MainController
 	{
 		final Movie fetchedMovie = externalSourceAdapter.getEntity(imdbId);
 		return movieService.save(fetchedMovie);
+	}
+
+	@Transactional
+	@GetMapping(value = "/game/updateAllByImdbId")
+	public void updateAllByImdbId() throws IOException, NoEntityFromExternalSourceFoundException
+	{
+		final List<Movie> all = movieService.findAll();
+		for (Movie movie : all) {
+			final Movie fetchedMovie = externalSourceAdapter.getEntity(movie.getIdentifiers().get("imdb"));
+			movieService.update(movie, fetchedMovie);
+		}
 	}
 }
