@@ -2,6 +2,7 @@ package net.ekatherine.code.aggregator.fetcher.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.Subject;
@@ -45,7 +46,7 @@ public class GiantBombGameAdapter implements ExternalSourceAdapter<Game>
 
 		final Game game = populateExternalContentToEntity(parsedGame);
 
-		game.addIdentifier("giantBombGuid", giantBombGuid);
+		game.addIdentifier(Constants.GIANT_BOMB_ID, giantBombGuid);
 
 		return game;
 	}

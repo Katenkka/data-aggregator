@@ -1,5 +1,6 @@
 package net.ekatherine.code.aggregator.service;
 
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.book.Book;
 import net.ekatherine.code.aggregator.repository.interfaces.BookRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +25,7 @@ public class BookServiceImpl implements BookService
 
 	private final Util util;
 
-	public BookServiceImpl(final BookRepository bookRepository, PartyService partyService, SubjectService subjectService, final Util util)
+	public BookServiceImpl(final BookRepository bookRepository, final PartyService partyService, final SubjectService subjectService, final Util util)
 	{
 		this.bookRepository = bookRepository;
 		this.partyService = partyService;
@@ -52,6 +54,14 @@ public class BookServiceImpl implements BookService
 		book.setPublishers(book.getPublishers().stream().map(partyService::replaceWithExisting).collect(Collectors.toSet()));
 
 		return bookRepository.saveAndFlush(book);
+	}
+
+	@Override
+	public Optional<Book> findByExtIdentifier(final String extId) {
+		return findAll().stream()
+			.filter(entity -> entity.getIdentifiers().containsKey(Constants.ISBN_10_ID)
+				&& entity.getIdentifiers().get(Constants.ISBN_10_ID).equalsIgnoreCase(extId))
+			.findFirst();
 	}
 
 	@Override

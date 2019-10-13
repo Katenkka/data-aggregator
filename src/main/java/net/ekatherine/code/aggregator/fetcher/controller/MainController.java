@@ -1,6 +1,7 @@
 package net.ekatherine.code.aggregator.fetcher.controller;
 
 import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSourceFoundException;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,7 @@ import java.io.IOException;
 @RequestMapping("/fetcher")
 public abstract class MainController
 {
+
 	@ResponseStatus(value = HttpStatus.NOT_FOUND)
 	@ResponseBody
 	@ExceptionHandler({NoEntityFromExternalSourceFoundException.class})
@@ -26,6 +28,6 @@ public abstract class MainController
 	@ResponseBody
 	@ExceptionHandler({IOException.class})
 	public void handleIOException(final Exception ex) {
-
+		LoggerFactory.getLogger(getClass().getName()).error("An error occurred", ex);
 	}
 }
