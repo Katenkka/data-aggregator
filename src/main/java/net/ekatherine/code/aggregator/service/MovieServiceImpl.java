@@ -1,5 +1,6 @@
 package net.ekatherine.code.aggregator.service;
 
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.movie.Movie;
 import net.ekatherine.code.aggregator.repository.interfaces.MovieRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class MovieServiceImpl implements MovieService
@@ -38,6 +40,14 @@ public class MovieServiceImpl implements MovieService
 	public List<Movie> findAll()
 	{
 		return movieRepository.findAll();
+	}
+
+	@Override
+	public Optional<Movie> findByExtIdentifier(final String extId) {
+		return findAll().stream()
+			.filter(entity -> entity.getIdentifiers().containsKey(Constants.IMDB_ID)
+				&& entity.getIdentifiers().get(Constants.IMDB_ID).equalsIgnoreCase(extId))
+			.findFirst();
 	}
 
 	@Override

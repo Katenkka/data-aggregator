@@ -2,6 +2,7 @@ package net.ekatherine.code.aggregator.fetcher.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.StatusEnum;
@@ -43,7 +44,7 @@ public class TvMazeTvShowAdapter implements ExternalSourceAdapter<TvShow>
 
 		final TvShow tvShow = populateExternalContentToEntity(parsedEntity);
 
-		tvShow.addIdentifier("tvmaze", tvMazeId);
+		tvShow.addIdentifier(Constants.TV_MAZE_ID, tvMazeId);
 
 		tvShow.setEpisodes(tvMazeEpisodesAdapter.getEntities(tvMazeId, tvShow));
 
@@ -87,17 +88,17 @@ public class TvMazeTvShowAdapter implements ExternalSourceAdapter<TvShow>
 
 		if (!StringUtils.isEmpty(parsedTvShow.externals.imdb))
 		{
-			tvShow.addIdentifier("imdb", util.sanitize(parsedTvShow.externals.imdb));
+			tvShow.addIdentifier(Constants.IMDB_ID, util.sanitize(parsedTvShow.externals.imdb));
 		}
 
 		if (!StringUtils.isEmpty(parsedTvShow.externals.thetvdb))
 		{
-			tvShow.addIdentifier("thetvdb", util.sanitize(parsedTvShow.externals.thetvdb));
+			tvShow.addIdentifier(Constants.THE_TV_DB_ID, util.sanitize(parsedTvShow.externals.thetvdb));
 		}
 
 		if (!StringUtils.isEmpty(parsedTvShow.externals.tvrage))
 		{
-			tvShow.addIdentifier("tvrage", util.sanitize(parsedTvShow.externals.tvrage));
+			tvShow.addIdentifier(Constants.TV_RAGE_ID, util.sanitize(parsedTvShow.externals.tvrage));
 		}
 
 		if (Objects.nonNull(parsedTvShow._embedded) && Objects.nonNull(parsedTvShow._embedded.cast))

@@ -99,13 +99,7 @@ public class Episode
 			return false;
 		}
 		final Episode episode = (Episode) o;
-		return getTvShow().equals(episode.getTvShow()) &&
-			getTitle().equals(episode.getTitle()) &&
-			getNumber().equals(episode.getNumber()) &&
-			getSeason().equals(episode.getSeason()) &&
-			Objects.equals(getPosterUrl(), episode.getPosterUrl()) &&
-			getAiredAt().equals(episode.getAiredAt()) &&
-			Objects.equals(getDescription(), episode.getDescription());
+		return Objects.equals(getFullNumber(), episode.getFullNumber());
 	}
 
 	public TvShow getTvShow()
@@ -161,7 +155,7 @@ public class Episode
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getTvShow(), getTitle(), getNumber(), getSeason(), getPosterUrl(), getAiredAt(), getDescription());
+		return Objects.hash(getFullNumber());
 	}
 
 	public Long getId()

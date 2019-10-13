@@ -1,5 +1,6 @@
 package net.ekatherine.code.aggregator.service;
 
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.game.Game;
 import net.ekatherine.code.aggregator.repository.interfaces.GameRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class GameServiceImpl implements GameService
@@ -38,6 +40,14 @@ public class GameServiceImpl implements GameService
 	public Game save(final Game entity)
 	{
 		return gameRepository.saveAndFlush(entity);
+	}
+
+	@Override
+	public Optional<Game> findByExtIdentifier(final String extId) {
+		return findAll().stream()
+			.filter(entity -> entity.getIdentifiers().containsKey(Constants.GIANT_BOMB_ID)
+				&& entity.getIdentifiers().get(Constants.GIANT_BOMB_ID).equalsIgnoreCase(extId))
+			.findFirst();
 	}
 
 	@Override

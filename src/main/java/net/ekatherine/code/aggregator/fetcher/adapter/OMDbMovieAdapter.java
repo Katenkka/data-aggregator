@@ -2,6 +2,7 @@ package net.ekatherine.code.aggregator.fetcher.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.Subject;
@@ -70,7 +71,7 @@ public class OMDbMovieAdapter implements ExternalSourceAdapter<Movie>
 
 		if (Objects.nonNull(parsedMovie.imdbID))
 		{
-			movie.addIdentifier("imdb", util.sanitize(parsedMovie.imdbID));
+			movie.addIdentifier(Constants.IMDB_ID, util.sanitize(parsedMovie.imdbID));
 		}
 
 		if (Objects.nonNull(parsedMovie.Released))

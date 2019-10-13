@@ -1,9 +1,11 @@
 package net.ekatherine.code.aggregator.fetcher.controller;
 
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.entity.game.Game;
 import net.ekatherine.code.aggregator.fetcher.adapter.interfaces.ExternalSourceAdapter;
 import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSourceFoundException;
 import net.ekatherine.code.aggregator.service.interfaces.GameService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,21 +38,29 @@ public class GameController extends MainController
 
 	@Transactional
 	@GetMapping(value = "/game/{id}/updateBy")
-	public Game updateByGiantBombGuid(@PathVariable final Long id, @RequestParam final String giantBombGuid) throws IOException, NoEntityFromExternalSourceFoundException
-	{
+	public Game updateByGiantBombGuid(@PathVariable final Long id, @RequestParam final String giantBombGuid) throws IOException, NoEntityFromExternalSourceFoundException {
 		final Game existing = gameService.getOne(id);
-		final Game fetched = externalSourceAdapter.getEntity(giantBombGuid);
-		return gameService.update(existing, fetched);
+		return updateGameByExternalId(existing, giantBombGuid);
 	}
 
 	@Transactional
 	@GetMapping(value = "/game/updateAllByGiantBombGuid")
-	public void updateAllByGiantBombGuid() throws IOException, NoEntityFromExternalSourceFoundException
+	public void updateAllByGiantBombGuid()
 	{
 		final List<Game> all = gameService.findAll();
-		for (Game game : all) {
-			final Game fetchedGame = externalSourceAdapter.getEntity(game.getIdentifiers().get("giantBombGuid"));
-			gameService.update(game, fetchedGame);
+		for (final Game game : all) {
+			try {
+				final String giantBombGuid = game.getIdentifiers().get(Constants.GIANT_BOMB_ID);
+				updateGameByExternalId(game, giantBombGuid);
+			} catch (final Throwable e) {
+				LoggerFactory.getLogger(getClass()).debug("Something went wrong while updating Game with id = {}", game.getId());
+				LoggerFactory.getLogger(getClass()).error("Message: ", e);
+			}
 		}
+	}
+
+	private Game updateGameByExternalId(final Game game, final String giantBombGuid) throws IOException, NoEntityFromExternalSourceFoundException {
+		final Game fetched = externalSourceAdapter.getEntity(giantBombGuid);
+		return gameService.update(game, fetched);
 	}
 }
