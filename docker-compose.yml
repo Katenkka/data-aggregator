@@ -1,7 +1,7 @@
 version: "3.1"
 
 services:
-  aggregator:
+  aggregator_app:
     container_name: aggregator_app
     build: ./
     working_dir: /application
@@ -12,13 +12,17 @@ services:
       - AGGREGATOR_CONFIG_LOCATION
       - AGGREGATOR_HOST_PORT
       - AGGREGATOR_CONTAINER_PORT
+    depends_on:
+      - aggregator_db
     restart: always
+    networks:
+      - internal
 
-  db:
+  aggregator_db:
     image: postgres:11
     container_name: aggregator_db
     volumes:
-      - /var/lib/postgresql/data/pgdata
+      - pgdata:${AGGREGATOR_PGDATA}
     expose:
       - 5432
     environment:
@@ -27,3 +31,27 @@ services:
       POSTGRES_PASSWORD: ${AGGREGATOR_PG_PASSWORD}
       PGDATA: ${AGGREGATOR_PGDATA}
     restart: unless-stopped
+    networks:
+      - internal
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-myadmin@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    restart: unless-stopped
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  pgdata:
+  pgadmin:
