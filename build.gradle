@@ -24,6 +24,14 @@ repositories {
 	mavenCentral()
 }
 
+springBoot {
+	mainClassName = 'net.ekatherine.code.aggregator.Application'
+}
+
+bootJar {
+	mainClassName = 'net.ekatherine.code.aggregator.Application'
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
