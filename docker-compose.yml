@@ -6,7 +6,8 @@ services:
     build: ./
     working_dir: /application
     ports:
-      - ${CONTAINER_PORT}:3711
+      - ${AGGREGATOR_CONTAINER_PORT}:${AGGREGATOR_HOST_PORT}
     environment:
-      ACTIVE_PROFILE: "development"
-      CONTAINER_PORT: 3711
+      - AGGREGATOR_ACTIVE_PROFILE
+      - AGGREGATOR_HOST_PORT
+      - AGGREGATOR_CONTAINER_PORT
