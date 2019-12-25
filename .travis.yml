@@ -5,6 +5,7 @@ jdk:
 
 before_install:
   - chmod +x gradlew
+  - source .env
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
