@@ -6,12 +6,12 @@ services:
     build: ./
     working_dir: /application
     ports:
-      - ${AGGREGATOR_CONTAINER_PORT}:${AGGREGATOR_HOST_PORT}
+      - ${AGGREGATOR_HOST_PORT}:${AGGREGATOR_CONTAINER_PORT}
     environment:
-      - AGGREGATOR_ACTIVE_PROFILE
-      - AGGREGATOR_CONFIG_LOCATION
-      - AGGREGATOR_HOST_PORT
-      - AGGREGATOR_CONTAINER_PORT
+      AGGREGATOR_ACTIVE_PROFILE: ${AGGREGATOR_ACTIVE_PROFILE:-prod}
+      AGGREGATOR_CONFIG_LOCATION: ${AGGREGATOR_CONFIG_LOCATION:-classpath:/application.properties}
+      AGGREGATOR_CONTAINER_PORT: ${AGGREGATOR_CONTAINER_PORT:-3711}
+      AGGREGATOR_HOST_PORT: ${AGGREGATOR_HOST_PORT:-8090}
     depends_on:
       - aggregator_db
     restart: always
@@ -24,10 +24,10 @@ services:
     expose:
       - 5432
     environment:
-      POSTGRES_USER: ${AGGREGATOR_PG_USER}
-      POSTGRES_DB: ${AGGREGATOR_PG_DB}
-      POSTGRES_PASSWORD: ${AGGREGATOR_PG_PASSWORD}
-      PGDATA: ${AGGREGATOR_PGDATA}
+      POSTGRES_USER: ${AGGREGATOR_PG_USER:-postgres}
+      POSTGRES_DB: ${AGGREGATOR_PG_DB:-postgres}
+      POSTGRES_PASSWORD: ${AGGREGATOR_PG_PASSWORD:-password}
+      PGDATA: ${AGGREGATOR_PGDATA:-/var/lib/postgresql/data/pgdata}
     restart: unless-stopped
     networks:
       - internal
