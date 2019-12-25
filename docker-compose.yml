@@ -21,8 +21,6 @@ services:
   aggregator_db:
     image: postgres:11
     container_name: aggregator_db
-    volumes:
-      - pgdata:${AGGREGATOR_PGDATA}
     expose:
       - 5432
     environment:
@@ -34,24 +32,6 @@ services:
     networks:
       - internal
 
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-myadmin@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
-    volumes:
-      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    restart: unless-stopped
-    networks:
-      - internal
-
 networks:
   internal:
     driver: bridge
-
-volumes:
-  pgdata:
-  pgadmin:
