@@ -15,5 +15,8 @@ RUN gradle bootJar -i --stacktrace
 FROM openjdk:8-jre-alpine
 MAINTAINER ekatherine.net
 COPY --from=builder /usr/src/java-code/build/libs/*.jar ./app.jar
-CMD ["/usr/bin/java", "-jar", "/app.jar", "--spring.profiles.active=${AGGREGATOR_ACTIVE_PROFILE}", "--server.port=${AGGREGATOR_CONTAINER_PORT}"]
+CMD ["/usr/bin/java", "-jar", "/app.jar", \
+"--spring.profiles.active=${AGGREGATOR_ACTIVE_PROFILE}", \
+"--spring.config.location=${AGGREGATOR_CONFIG_LOCATION}", \
+"--server.port=${AGGREGATOR_CONTAINER_PORT}" ]
 EXPOSE ${AGGREGATOR_CONTAINER_PORT}
