@@ -17,5 +17,11 @@ jobs:
       run: chmod +x gradlew
     - name: Set env variables
       run: source .env
+    - name: Cache Gradle packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: ${{ runner.os }}-gradle
     - name: Test with Gradle
       run: ./gradlew clean check
