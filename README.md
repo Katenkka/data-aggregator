@@ -1,4 +1,4 @@
-[![Build Status](https://www.travis-ci.com/Katenkka/data-aggregator.svg?branch=master)](https://www.travis-ci.com/Katenkka/data-aggregator)
+![Run tests](https://github.com/Katenkka/data-aggregator/workflows/Run%20tests/badge.svg)
 
 Simple aggregator for games, books, tv-shows and movies data. Designed to be used  as a REST service, by internal services, that's why (for now) does not have any authorization implemented. 
 
