@@ -7,6 +7,7 @@ services:
     working_dir: /application
     ports:
       - ${AGGREGATOR_HOST_PORT}:${AGGREGATOR_CONTAINER_PORT}
+      - 8000:8000
     environment:
       AGGREGATOR_ACTIVE_PROFILE: ${AGGREGATOR_ACTIVE_PROFILE:-prod}
       AGGREGATOR_CONFIG_LOCATION: ${AGGREGATOR_CONFIG_LOCATION:-classpath:/application.properties}
