@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController(value = "fetcherGameController")
 public class GameController extends MainController
@@ -33,6 +34,10 @@ public class GameController extends MainController
 	public Game addByGiantBombGuid(@RequestParam final String giantBombGuid) throws IOException, NoEntityFromExternalSourceFoundException
 	{
 		final Game fetched = externalSourceAdapter.getEntity(giantBombGuid);
+		final Optional<Game> existing = gameService.findByExtIdentifier(giantBombGuid);
+		if (existing.isPresent()) {
+			return gameService.update(existing.get(), fetched);
+		}
 		return gameService.save(fetched);
 	}
 
