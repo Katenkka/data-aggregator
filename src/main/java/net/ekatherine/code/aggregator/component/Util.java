@@ -1,7 +1,9 @@
 package net.ekatherine.code.aggregator.component;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.jsoup.Jsoup;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -19,7 +21,11 @@ public class Util {
 		}
 	}
 
-	public String sanitize(final String toSanitize) {
+	public String sanitize(@Nullable final String toSanitize) {
+		if(Strings.isBlank(toSanitize)) {
+			return Strings.EMPTY;
+		}
+
 		return StringEscapeUtils.unescapeJava(StringUtils.trimWhitespace(Jsoup.parse(StringEscapeUtils.escapeJava(toSanitize)).text()));
 	}
 }
