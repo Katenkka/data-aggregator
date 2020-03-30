@@ -2,7 +2,7 @@ package net.ekatherine.code.aggregator.service.interfaces;
 
 import java.util.Optional;
 
-public interface GenericEntityService<T>
+interface GenericEntityService<T>
 {
 	T getOne(Long id);
 

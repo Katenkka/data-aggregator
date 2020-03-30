@@ -5,6 +5,8 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
 import net.ekatherine.code.aggregator.repository.interfaces.TvShowRepository;
 import net.ekatherine.code.aggregator.service.interfaces.TvShowService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -37,11 +39,14 @@ public class TvShowServiceImpl implements TvShowService
 	}
 
 	@Override
+	public Page<TvShow> findAll(Pageable pageable)
+	{
+		return tvShowRepository.findAll(pageable);
+	}
+
+	@Override
 	public Optional<TvShow> findByExtIdentifier(final String extId) {
-		return findAll().stream()
-			.filter(show -> show.getIdentifiers().containsKey(Constants.TV_MAZE_ID)
-				&& show.getIdentifiers().get(Constants.TV_MAZE_ID).equalsIgnoreCase(extId))
-			.findFirst();
+		return tvShowRepository.findOneByExternalIdentifier(Constants.TV_MAZE_ID, extId);
 	}
 
 	@Override
