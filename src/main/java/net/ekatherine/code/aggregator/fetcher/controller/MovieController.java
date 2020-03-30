@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController(value = "fetcherMovieController")
 public class MovieController extends MainController
@@ -36,11 +35,7 @@ public class MovieController extends MainController
 	public Movie updateOrAddNewByImdbId(@RequestParam final String imdbId) throws IOException, NoEntityFromExternalSourceFoundException
 	{
 		final Movie fetchedMovie = externalSourceAdapter.getEntity(imdbId);
-		final Optional<Movie> existing = movieService.findByExtIdentifier(imdbId);
-		if (existing.isPresent()) {
-			return movieService.update(existing.get(), fetchedMovie);
-		}
-		return movieService.save(fetchedMovie);
+		return movieService.mergeWithExisting(fetchedMovie);
 	}
 
 	@Transactional

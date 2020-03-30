@@ -1,6 +1,5 @@
 package net.ekatherine.code.aggregator.service;
 
-import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.movie.Movie;
 import net.ekatherine.code.aggregator.repository.interfaces.MovieRepository;
@@ -51,8 +50,8 @@ public class MovieServiceImpl implements MovieService
 	}
 
 	@Override
-	public Optional<Movie> findByExtIdentifier(final String extId) {
-		return movieRepository.findOneByExternalIdentifier(Constants.IMDB_ID, extId);
+	public Optional<Movie> findByExtIdentifier(final String name, final String value) {
+		return movieRepository.findOneByExternalIdentifier(name, value);
 	}
 
 	@Override

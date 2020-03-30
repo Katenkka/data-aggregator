@@ -1,6 +1,5 @@
 package net.ekatherine.code.aggregator.service;
 
-import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.book.Book;
 import net.ekatherine.code.aggregator.repository.interfaces.BookRepository;
@@ -65,8 +64,8 @@ public class BookServiceImpl implements BookService
 	}
 
 	@Override
-	public Optional<Book> findByExtIdentifier(final String extId) {
-		return bookRepository.findOneByExternalIdentifier(Constants.ISBN_10_ID, extId);
+	public Optional<Book> findByExtIdentifier(final String name, final String value) {
+		return bookRepository.findOneByExternalIdentifier(name, value);
 	}
 
 	@Override

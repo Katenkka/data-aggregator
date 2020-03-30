@@ -1,6 +1,5 @@
 package net.ekatherine.code.aggregator.service;
 
-import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
 import net.ekatherine.code.aggregator.repository.interfaces.TvShowRepository;
@@ -45,8 +44,8 @@ public class TvShowServiceImpl implements TvShowService
 	}
 
 	@Override
-	public Optional<TvShow> findByExtIdentifier(final String extId) {
-		return tvShowRepository.findOneByExternalIdentifier(Constants.TV_MAZE_ID, extId);
+	public Optional<TvShow> findByExtIdentifier(final String name, final String value) {
+		return tvShowRepository.findOneByExternalIdentifier(name, value);
 	}
 
 	@Override
