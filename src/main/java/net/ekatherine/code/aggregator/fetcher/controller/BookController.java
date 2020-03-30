@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController(value = "fetcherBookController")
 public class BookController extends MainController
@@ -36,11 +35,7 @@ public class BookController extends MainController
 	public Book addByIsbn(@RequestParam final String isbn10) throws IOException, NoEntityFromExternalSourceFoundException
 	{
 		final Book fetchedBook = externalSourceAdapter.getEntity(isbn10);
-		final Optional<Book> existing = bookService.findByExtIdentifier(isbn10);
-		if (existing.isPresent()) {
-			return bookService.update(existing.get(), fetchedBook);
-		}
-		return bookService.save(fetchedBook);
+		return bookService.mergeWithExisting(fetchedBook);
 	}
 
 	@Transactional

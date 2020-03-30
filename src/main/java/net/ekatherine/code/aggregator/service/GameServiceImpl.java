@@ -1,6 +1,5 @@
 package net.ekatherine.code.aggregator.service;
 
-import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.game.Game;
 import net.ekatherine.code.aggregator.repository.interfaces.GameRepository;
@@ -51,8 +50,8 @@ public class GameServiceImpl implements GameService
 	}
 
 	@Override
-	public Optional<Game> findByExtIdentifier(final String extId) {
-		return gameRepository.findOneByExternalIdentifier(Constants.GIANT_BOMB_ID, extId);
+	public Optional<Game> findByExtIdentifier(final String name, final String value) {
+		return gameRepository.findOneByExternalIdentifier(name, value);
 	}
 
 	@Override

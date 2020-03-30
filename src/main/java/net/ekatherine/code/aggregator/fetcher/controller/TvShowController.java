@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController(value = "fetcherTvShowController")
 public class TvShowController extends MainController
@@ -36,11 +35,7 @@ public class TvShowController extends MainController
 	public TvShow updateOrAddNewByTvMazeId(@RequestParam final String tvMazeId) throws IOException, NoEntityFromExternalSourceFoundException
 	{
 		final TvShow fetchedTvShow = externalSourceAdapter.getEntity(tvMazeId);
-		final Optional<TvShow> existingTvShow = tvShowService.findByExtIdentifier(tvMazeId);
-		if (existingTvShow.isPresent()) {
-			return tvShowService.update(existingTvShow.get(), fetchedTvShow);
-		}
-		return tvShowService.save(fetchedTvShow);
+		return tvShowService.mergeWithExisting(fetchedTvShow);
 	}
 
 	@Transactional
