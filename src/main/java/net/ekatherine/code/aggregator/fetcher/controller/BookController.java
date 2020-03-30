@@ -7,14 +7,16 @@ import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSour
 import net.ekatherine.code.aggregator.service.interfaces.BookService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @RestController(value = "fetcherBookController")
@@ -49,12 +51,18 @@ public class BookController extends MainController
 		return updateBookByExternalId(book, isbn10);
 	}
 
-	@Transactional
 	@GetMapping(value = "/book/updateAllByIsbn")
-	public void updateAllByIsbn()
+	@ResponseStatus(HttpStatus.OK)
+	public void updateAllByIsbn(@PageableDefault(size = 200)
+								@SortDefault.SortDefaults({@SortDefault(sort = "id", direction = Sort.Direction.ASC)})
+								Pageable pageable)
 	{
-		final List<Book> all = bookService.findAll();
-		for (final Book book : all) {
+		Page<Book> bookPage = bookService.findAll(pageable);
+		if(bookPage.isEmpty()) {
+			return;
+		}
+
+		bookPage.get().forEach(book -> {
 			try {
 				final String isbnKey = book.getIdentifiers().get(Constants.ISBN_10_ID);
 				updateBookByExternalId(book, isbnKey);
@@ -62,7 +70,7 @@ public class BookController extends MainController
 				LoggerFactory.getLogger(getClass()).debug("Something went wrong while updating Book with id = {}", book.getId());
 				LoggerFactory.getLogger(getClass()).error("Message: ", e);
 			}
-		}
+		});
 	}
 
 	private Book updateBookByExternalId(final Book book, final String isbnKey) throws IOException, NoEntityFromExternalSourceFoundException {

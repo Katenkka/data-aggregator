@@ -2,9 +2,6 @@ package net.ekatherine.code.aggregator.service.interfaces;
 
 import net.ekatherine.code.aggregator.entity.movie.Movie;
 
-import java.util.List;
-
-public interface MovieService extends GenericEntityService<Movie>, UpdatableEntityService<Movie>
+public interface MovieService extends GenericEntityService<Movie>, UpdatableEntityService<Movie>, FindAllEntityService<Movie>
 {
-	List<Movie> findAll();
 }
