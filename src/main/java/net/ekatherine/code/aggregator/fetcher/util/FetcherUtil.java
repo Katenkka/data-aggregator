@@ -1,6 +1,6 @@
 package net.ekatherine.code.aggregator.fetcher.util;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @Component
+@Slf4j
 public class FetcherUtil
 {
 	public String connectAndRetrieveJson(final String url, final int timeout) throws IOException
@@ -54,7 +55,7 @@ public class FetcherUtil
 					c.disconnect();
 				} catch (final Exception ex)
 				{
-					LoggerFactory.getLogger(getClass().getName()).warn("An error occurred", ex);
+					log.warn("An error occurred", ex);
 				}
 			}
 		}
