@@ -58,4 +58,24 @@ public class UtilTest {
 
 		Assert.assertEquals(expected, sanitized);
 	}
+
+	@Test
+	public void returnsEmptyStringWhenGivenIsNull()
+	{
+		final String sanitized = util.sanitize(null);
+
+		final String expected = "";
+
+		Assert.assertEquals(expected, sanitized);
+	}
+
+	@Test
+	public void returnsEmptyStringWhenGivenIsBlank()
+	{
+		final String sanitized = util.sanitize("                ");
+
+		final String expected = "";
+
+		Assert.assertEquals(expected, sanitized);
+	}
 }

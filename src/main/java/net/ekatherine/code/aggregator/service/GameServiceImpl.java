@@ -6,6 +6,8 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.game.Game;
 import net.ekatherine.code.aggregator.repository.interfaces.GameRepository;
 import net.ekatherine.code.aggregator.service.interfaces.GameService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -33,17 +35,20 @@ public class GameServiceImpl implements GameService
 	}
 
 	@Override
+	public Page<Game> findAll(Pageable pageable)
+	{
+		return gameRepository.findAll(pageable);
+	}
+
+	@Override
 	public Game save(final Game entity)
 	{
 		return gameRepository.saveAndFlush(entity);
 	}
 
 	@Override
-	public Optional<Game> findByExtIdentifier(final String extId) {
-		return findAll().stream()
-			.filter(entity -> entity.getIdentifiers().containsKey(Constants.GIANT_BOMB_ID)
-				&& entity.getIdentifiers().get(Constants.GIANT_BOMB_ID).equalsIgnoreCase(extId))
-			.findFirst();
+	public Optional<Game> findByExtIdentifier(final String name, final String value) {
+		return gameRepository.findOneByExternalIdentifier(name, value);
 	}
 
 	@Override

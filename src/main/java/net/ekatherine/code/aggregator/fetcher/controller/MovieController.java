@@ -7,15 +7,16 @@ import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSour
 import net.ekatherine.code.aggregator.service.interfaces.MovieService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 
 @RestController(value = "fetcherMovieController")
 public class MovieController extends MainController
@@ -34,11 +35,7 @@ public class MovieController extends MainController
 	public Movie updateOrAddNewByImdbId(@RequestParam final String imdbId) throws IOException, NoEntityFromExternalSourceFoundException
 	{
 		final Movie fetchedMovie = externalSourceAdapter.getEntity(imdbId);
-		final Optional<Movie> existing = movieService.findByExtIdentifier(imdbId);
-		if (existing.isPresent()) {
-			return movieService.update(existing.get(), fetchedMovie);
-		}
-		return movieService.save(fetchedMovie);
+		return movieService.mergeWithExisting(fetchedMovie);
 	}
 
 	@Transactional
@@ -48,12 +45,18 @@ public class MovieController extends MainController
 		return updateMovieByExternalId(movie, imdbId);
 	}
 
-	@Transactional
 	@GetMapping(value = "/movie/updateAllByImdbId")
-	public void updateAllByImdbId()
+	@ResponseStatus(HttpStatus.OK)
+	public void updateAllByImdbId(@PageableDefault(size = 200)
+								  @SortDefault.SortDefaults({@SortDefault(sort = "id", direction = Sort.Direction.ASC)})
+								  Pageable pageable)
 	{
-		final List<Movie> all = movieService.findAll();
-		for (final Movie movie : all) {
+		Page<Movie> page = movieService.findAll(pageable);
+		if(page.isEmpty()) {
+			return;
+		}
+
+		page.get().forEach(movie -> {
 			try {
 				final String imdbKey = movie.getIdentifiers().get(Constants.IMDB_ID);
 				updateMovieByExternalId(movie, imdbKey);
@@ -61,7 +64,7 @@ public class MovieController extends MainController
 				LoggerFactory.getLogger(getClass()).debug("Something went wrong while updating Movie with id = {}", movie.getId());
 				LoggerFactory.getLogger(getClass()).error("Message: ", e);
 			}
-		}
+		});
 	}
 
 	private Movie updateMovieByExternalId(final Movie movie, final String imdbKey) throws IOException, NoEntityFromExternalSourceFoundException {

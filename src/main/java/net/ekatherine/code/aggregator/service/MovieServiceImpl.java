@@ -6,6 +6,8 @@ import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.movie.Movie;
 import net.ekatherine.code.aggregator.repository.interfaces.MovieRepository;
 import net.ekatherine.code.aggregator.service.interfaces.MovieService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -39,11 +41,14 @@ public class MovieServiceImpl implements MovieService
 	}
 
 	@Override
-	public Optional<Movie> findByExtIdentifier(final String extId) {
-		return findAll().stream()
-			.filter(entity -> entity.getIdentifiers().containsKey(Constants.IMDB_ID)
-				&& entity.getIdentifiers().get(Constants.IMDB_ID).equalsIgnoreCase(extId))
-			.findFirst();
+	public Page<Movie> findAll(Pageable pageable)
+	{
+		return movieRepository.findAll(pageable);
+	}
+
+	@Override
+	public Optional<Movie> findByExtIdentifier(final String name, final String value) {
+		return movieRepository.findOneByExternalIdentifier(name, value);
 	}
 
 	@Override

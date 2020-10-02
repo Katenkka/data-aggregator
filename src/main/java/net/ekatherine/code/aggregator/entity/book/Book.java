@@ -8,20 +8,7 @@ import net.ekatherine.code.aggregator.entity.interfaces.HasExternalIdentifiers;
 import net.ekatherine.code.aggregator.entity.interfaces.Timestampable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.HashMap;
@@ -43,7 +30,7 @@ public class Book implements Timestampable, HasExternalIdentifiers
 	@NotBlank
 	private String title;
 
-	@Column(name = "description")
+	@Column(name = "description", length = 1000)
 	private String description;
 
 	@Column(name = "cover_url")

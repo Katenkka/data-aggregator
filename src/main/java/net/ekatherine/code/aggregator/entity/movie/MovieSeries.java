@@ -3,14 +3,7 @@ package net.ekatherine.code.aggregator.entity.movie;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import net.ekatherine.code.aggregator.entity.interfaces.Series;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,7 +23,7 @@ public class MovieSeries implements Series<Movie>
 	@NotBlank
 	private String title;
 
-	@Column(name = "description")
+	@Column(name = "description", length = 1000)
 	private String description;
 
 	@OneToMany(mappedBy = "movieSeries", cascade = CascadeType.ALL)

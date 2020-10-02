@@ -8,6 +8,8 @@ import net.ekatherine.code.aggregator.repository.interfaces.BookRepository;
 import net.ekatherine.code.aggregator.service.interfaces.BookService;
 import net.ekatherine.code.aggregator.service.interfaces.PartyService;
 import net.ekatherine.code.aggregator.service.interfaces.SubjectService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -38,6 +40,12 @@ public class BookServiceImpl implements BookService
 	}
 
 	@Override
+	public Page<Book> findAll(Pageable pageable)
+	{
+		return bookRepository.findAll(pageable);
+	}
+
+	@Override
 	public Book save(final Book book)
 	{
 		book.setCategories(book.getCategories().stream().map(subjectService::replaceWithExisting).collect(Collectors.toSet()));
@@ -49,11 +57,8 @@ public class BookServiceImpl implements BookService
 	}
 
 	@Override
-	public Optional<Book> findByExtIdentifier(final String extId) {
-		return findAll().stream()
-			.filter(entity -> entity.getIdentifiers().containsKey(Constants.ISBN_10_ID)
-				&& entity.getIdentifiers().get(Constants.ISBN_10_ID).equalsIgnoreCase(extId))
-			.findFirst();
+	public Optional<Book> findByExtIdentifier(final String name, final String value) {
+		return bookRepository.findOneByExternalIdentifier(name, value);
 	}
 
 	@Override
