@@ -2,6 +2,7 @@ package net.ekatherine.code.aggregator.fetcher.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.tv.Episode;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
@@ -22,16 +23,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 class TvMazeEpisodesAdapter
 {
 	private final FetcherUtil fetcherUtil;
 	private final Util util;
-
-	TvMazeEpisodesAdapter(final FetcherUtil fetcherUtil, final Util util)
-	{
-		this.fetcherUtil = fetcherUtil;
-		this.util = util;
-	}
 
 	List<Episode> getEntities(@NotBlank final String tvMazeId, final TvShow tvShow) throws IOException
 	{

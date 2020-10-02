@@ -1,11 +1,10 @@
 package net.ekatherine.code.aggregator.fetcher.exception;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class NoEntityFromExternalSourceFoundException extends Exception
 {
-	public NoEntityFromExternalSourceFoundException()
-	{
-	}
-
 	public NoEntityFromExternalSourceFoundException(final String message)
 	{
 		super(message);

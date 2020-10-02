@@ -1,5 +1,7 @@
 package net.ekatherine.code.aggregator.service;
 
+import lombok.RequiredArgsConstructor;
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.game.Game;
 import net.ekatherine.code.aggregator.repository.interfaces.GameRepository;
@@ -14,16 +16,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class GameServiceImpl implements GameService
 {
 	private final GameRepository gameRepository;
 	private final Util util;
-
-	public GameServiceImpl(final GameRepository gameRepository, final Util util)
-	{
-		this.gameRepository = gameRepository;
-		this.util = util;
-	}
 
 	@Override
 	public Game getOne(final Long id)

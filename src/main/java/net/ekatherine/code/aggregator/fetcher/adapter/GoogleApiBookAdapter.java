@@ -2,6 +2,7 @@ package net.ekatherine.code.aggregator.fetcher.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
 import net.ekatherine.code.aggregator.entity.Subject;
@@ -24,16 +25,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Component
+@RequiredArgsConstructor
 public class GoogleApiBookAdapter implements ExternalSourceAdapter<Book>
 {
 	private final FetcherUtil fetcherUtil;
 	private final Util util;
-
-	public GoogleApiBookAdapter(final FetcherUtil fetcherUtil, final Util util)
-	{
-		this.fetcherUtil = fetcherUtil;
-		this.util = util;
-	}
 
 	@Override
 	public Book getEntity(@NotBlank final String isbn10) throws IOException, NoEntityFromExternalSourceFoundException
