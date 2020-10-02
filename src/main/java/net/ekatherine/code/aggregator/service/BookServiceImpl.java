@@ -1,5 +1,6 @@
 package net.ekatherine.code.aggregator.service;
 
+import lombok.RequiredArgsConstructor;
 import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.book.Book;
@@ -16,22 +17,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService
 {
 	private final BookRepository bookRepository;
-
 	private final SubjectService subjectService;
 	private final PartyService partyService;
-
 	private final Util util;
-
-	public BookServiceImpl(final BookRepository bookRepository, final PartyService partyService, final SubjectService subjectService, final Util util)
-	{
-		this.bookRepository = bookRepository;
-		this.partyService = partyService;
-		this.subjectService = subjectService;
-		this.util = util;
-	}
 
 	@Override
 	public Book getOne(final Long id)

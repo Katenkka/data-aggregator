@@ -1,5 +1,6 @@
 package net.ekatherine.code.aggregator.service;
 
+import lombok.RequiredArgsConstructor;
 import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.tv.TvShow;
@@ -13,16 +14,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TvShowServiceImpl implements TvShowService
 {
 	private final TvShowRepository tvShowRepository;
 	private final Util util;
-
-	public TvShowServiceImpl(final TvShowRepository tvShowRepository, final Util util)
-	{
-		this.tvShowRepository = tvShowRepository;
-		this.util = util;
-	}
 
 	@Override
 	public TvShow getOne(final Long id)

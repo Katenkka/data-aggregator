@@ -2,6 +2,7 @@ package net.ekatherine.code.aggregator.fetcher.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.Party;
@@ -24,18 +25,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Component
+@RequiredArgsConstructor
 public class TvMazeTvShowAdapter implements ExternalSourceAdapter<TvShow>
 {
 	private final FetcherUtil fetcherUtil;
 	private final Util util;
 	private final TvMazeEpisodesAdapter tvMazeEpisodesAdapter;
-
-	public TvMazeTvShowAdapter(final FetcherUtil fetcherUtil, final Util util, final TvMazeEpisodesAdapter tvMazeEpisodesAdapter)
-	{
-		this.fetcherUtil = fetcherUtil;
-		this.util = util;
-		this.tvMazeEpisodesAdapter = tvMazeEpisodesAdapter;
-	}
 
 	@Override
 	public TvShow getEntity(@NotBlank final String tvMazeId) throws IOException
