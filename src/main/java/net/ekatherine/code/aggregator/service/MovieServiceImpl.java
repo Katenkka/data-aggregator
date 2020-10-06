@@ -1,5 +1,7 @@
 package net.ekatherine.code.aggregator.service;
 
+import lombok.RequiredArgsConstructor;
+import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.component.Util;
 import net.ekatherine.code.aggregator.entity.movie.Movie;
 import net.ekatherine.code.aggregator.repository.interfaces.MovieRepository;
@@ -14,16 +16,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MovieServiceImpl implements MovieService
 {
 	private final MovieRepository movieRepository;
 	private final Util util;
-
-	public MovieServiceImpl(final MovieRepository movieRepository, final Util util)
-	{
-		this.movieRepository = movieRepository;
-		this.util = util;
-	}
 
 	@Override
 	public Movie getOne(final Long id)

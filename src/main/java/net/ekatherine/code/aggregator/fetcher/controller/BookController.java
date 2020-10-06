@@ -1,11 +1,11 @@
 package net.ekatherine.code.aggregator.fetcher.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import net.ekatherine.code.aggregator.component.Constants;
 import net.ekatherine.code.aggregator.entity.book.Book;
 import net.ekatherine.code.aggregator.fetcher.adapter.interfaces.ExternalSourceAdapter;
 import net.ekatherine.code.aggregator.fetcher.exception.NoEntityFromExternalSourceFoundException;
 import net.ekatherine.code.aggregator.service.interfaces.BookService;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,11 +14,16 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
 @RestController(value = "fetcherBookController")
+@Slf4j
 public class BookController extends MainController
 {
 	private final ExternalSourceAdapter<Book> externalSourceAdapter;
@@ -62,8 +67,8 @@ public class BookController extends MainController
 				final String isbnKey = book.getIdentifiers().get(Constants.ISBN_10_ID);
 				updateBookByExternalId(book, isbnKey);
 			} catch (final Throwable e) {
-				LoggerFactory.getLogger(getClass()).debug("Something went wrong while updating Book with id = {}", book.getId());
-				LoggerFactory.getLogger(getClass()).error("Message: ", e);
+				log.debug("Something went wrong while updating Book with id = {}", book.getId());
+				log.error("Message: ", e);
 			}
 		});
 	}
